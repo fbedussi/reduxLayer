@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    height: 2em;
+    background: green;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+menuOpener {
+    background: red;
+}
+
+accountOpener {
+    background: purple;
+}
+
+cartOpener {
+    background: orange;
+}
+
+main {
+    background: blue;
+    flex: 1;
+}
+
+footer {
+    height: 4em;
+    background: yellow;
+}
+
+.layer {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    transition: transform 0.5s;
+    padding: 4em;
+    box-sizing: border-box;
+}
+
+.fromLeft {
+    left: -100vw;
+}
+
+.fromLeft.open {
+    transform: translateX(100%);
+}
+
+.fromTop {
+    top: -100vh;
+}
+
+.fromTop.open {
+    transform: translateY(100%);
+}
+
+.fromRight {
+    right: -100vw;
+}
+
+.fromRight.open {
+    transform: translateX(-100%);
+}
+
+.menuLayer {
+    background: lightgray;
+}
+
+.accountLayer {
+    background: teal;
+}
+
+.cartLayer {
+    background: grey;
+}
