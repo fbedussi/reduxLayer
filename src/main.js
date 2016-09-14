@@ -3,6 +3,8 @@ import {createStore} from 'redux';
 function initLayers() {
     return {
         openedLayer: null,
+        nextLayerToOpen: null,
+        animating: false,
         layers: ['menu', 'account', 'cart'].map(function(id) {
             return {
                 id,
@@ -27,6 +29,9 @@ function openLayer(id) {
     return { type: 'OPEN_LAYER', id: id };
 }
 
+function enqueueLayerToOpen(id) {
+    return { type: 'ENQUEUE_LAYER', id: id };
+}
 
 //Reducer
 function reducer(state, action) {
@@ -46,6 +51,7 @@ function reducer(state, action) {
         case 'CLOSE_LAYER':
             return Object.assign({}, state, {
                 openedLayer: null,
+                animating: true,
                 layers: state.layers.map(function(layer){
                     if (layer.id === action.id) {
                         layer.opened = false;
@@ -56,12 +62,22 @@ function reducer(state, action) {
         case 'OPEN_LAYER':
             return Object.assign({}, state, {
                openedLayer: action.id,
+               nextLayerToOpen: null,
+               animating: true,
                layers: state.layers.map(function(layer){
                     if (layer.id === action.id) {
                         layer.opened = true;
                     }
                     return layer;
                 })
+            });
+        case 'TRANSITION_END':
+            return Object.assign({}, state, {
+               animating: false
+            });
+        case 'ENQUEUE_LAYER':
+            return Object.assign({}, state, {
+               nextLayerToOpen: action.id
             });
         default:
             return state;
@@ -75,6 +91,11 @@ store.subscribe(function() {
     const state = store.getState();
     console.log(state);
   
+    if (!state.animating && state.nextLayerToOpen) {
+        store.dispatch(openLayer(store.nextLayerToOpen));
+        return;
+    }
+    
     state.layers.forEach(function(layer) {
         (layer.opened) ? layer.el.classList.add('open') : layer.el.classList.remove('open');
     });
@@ -86,15 +107,17 @@ function dispatchToggleLayerId(id) {
     };
 }
 
+function dispatchClearAnimating() {
+    store.dispatch({type: 'TRANSITION_END'});
+}
+
 function clickHandler(id) {
     return function() {
         var openedLayer = store.getState().openedLayer;
     
         if (openedLayer && openedLayer !== id) {
             store.dispatch(closeLayer(openedLayer));
-            setTimeout(function() {
-                store.dispatch(openLayer(id));
-            }, 500);
+            store.dispatch(enqueueLayerToOpen(id));
             return;
         }
         
@@ -110,4 +133,5 @@ function clickHandler(id) {
 store.getState().layers.forEach(function(layer) {
     //layer.opener.addEventListener('click', dispatchToggleLayerId(layer.id));
     layer.opener.addEventListener('click', clickHandler(layer.id));
+    layer.el.addEventListener('transitionend', dispatchClearAnimating);
 });
