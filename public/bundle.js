@@ -2,6 +2,30 @@
 'use strict';
 
 exports.__esModule = true;
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch;
+    var getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+exports['default'] = thunk;
+},{}],2:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -57,7 +81,7 @@ function applyMiddleware() {
     };
   };
 }
-},{"./compose":4}],2:[function(require,module,exports){
+},{"./compose":5}],3:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -109,7 +133,7 @@ function bindActionCreators(actionCreators, dispatch) {
   }
   return boundActionCreators;
 }
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -254,7 +278,7 @@ function combineReducers(reducers) {
   };
 }
 }).call(this,require('_process'))
-},{"./createStore":5,"./utils/warning":7,"_process":16,"lodash/isPlainObject":12}],4:[function(require,module,exports){
+},{"./createStore":6,"./utils/warning":8,"_process":17,"lodash/isPlainObject":13}],5:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -293,7 +317,7 @@ function compose() {
     }, last.apply(undefined, arguments));
   };
 }
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -555,7 +579,7 @@ function createStore(reducer, preloadedState, enhancer) {
     replaceReducer: replaceReducer
   }, _ref2[_symbolObservable2['default']] = observable, _ref2;
 }
-},{"lodash/isPlainObject":12,"symbol-observable":13}],6:[function(require,module,exports){
+},{"lodash/isPlainObject":13,"symbol-observable":14}],7:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -604,7 +628,7 @@ exports.bindActionCreators = _bindActionCreators2['default'];
 exports.applyMiddleware = _applyMiddleware2['default'];
 exports.compose = _compose2['default'];
 }).call(this,require('_process'))
-},{"./applyMiddleware":1,"./bindActionCreators":2,"./combineReducers":3,"./compose":4,"./createStore":5,"./utils/warning":7,"_process":16}],7:[function(require,module,exports){
+},{"./applyMiddleware":2,"./bindActionCreators":3,"./combineReducers":4,"./compose":5,"./createStore":6,"./utils/warning":8,"_process":17}],8:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -630,7 +654,7 @@ function warning(message) {
   } catch (e) {}
   /* eslint-enable no-empty */
 }
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var overArg = require('./_overArg');
 
 /** Built-in value references. */
@@ -638,7 +662,7 @@ var getPrototype = overArg(Object.getPrototypeOf, Object);
 
 module.exports = getPrototype;
 
-},{"./_overArg":10}],9:[function(require,module,exports){
+},{"./_overArg":11}],10:[function(require,module,exports){
 /**
  * Checks if `value` is a host object in IE < 9.
  *
@@ -660,7 +684,7 @@ function isHostObject(value) {
 
 module.exports = isHostObject;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /**
  * Creates a unary function that invokes `func` with its argument transformed.
  *
@@ -677,7 +701,7 @@ function overArg(func, transform) {
 
 module.exports = overArg;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * Checks if `value` is object-like. A value is object-like if it's not `null`
  * and has a `typeof` result of "object".
@@ -708,7 +732,7 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var getPrototype = require('./_getPrototype'),
     isHostObject = require('./_isHostObject'),
     isObjectLike = require('./isObjectLike');
@@ -780,10 +804,10 @@ function isPlainObject(value) {
 
 module.exports = isPlainObject;
 
-},{"./_getPrototype":8,"./_isHostObject":9,"./isObjectLike":11}],13:[function(require,module,exports){
+},{"./_getPrototype":9,"./_isHostObject":10,"./isObjectLike":12}],14:[function(require,module,exports){
 module.exports = require('./lib/index');
 
-},{"./lib/index":14}],14:[function(require,module,exports){
+},{"./lib/index":15}],15:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -808,7 +832,7 @@ if (typeof global !== 'undefined') {
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./ponyfill":15}],15:[function(require,module,exports){
+},{"./ponyfill":16}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -832,7 +856,7 @@ function symbolObservablePonyfill(root) {
 
 	return result;
 };
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1014,16 +1038,20 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 var _redux = require('redux');
 
+var _reduxThunk = require('redux-thunk');
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function initLayers() {
     return {
         openedLayer: null,
-        nextLayerToOpen: null,
-        animating: false,
         layers: ['menu', 'account', 'cart'].map(function (id) {
             return {
                 id: id,
@@ -1036,10 +1064,6 @@ function initLayers() {
 }
 
 //Actions
-function toggleLayer(id) {
-    return { type: 'TOGGLE_LAYER', id: id };
-}
-
 function closeLayer(id) {
     return { type: 'CLOSE_LAYER', id: id };
 }
@@ -1048,28 +1072,36 @@ function openLayer(id) {
     return { type: 'OPEN_LAYER', id: id };
 }
 
-function enqueueLayerToOpen(id) {
-    return { type: 'ENQUEUE_LAYER', id: id };
+function toggleLayer(id) {
+    var state = store.getState();
+    var layer = state.layers.filter(function (layer) {
+        return layer.id === id;
+    })[0];
+    var timer = 0;
+
+    return function (dispatch) {
+        if (layer.opened) {
+            dispatch(closeLayer(id));
+            return;
+        }
+
+        if (state.openedLayer) {
+            dispatch(closeLayer(state.openedLayer));
+            timer = 500;
+        }
+
+        setTimeout(function () {
+            dispatch(openLayer(id));
+        }, timer);
+    };
 }
 
 //Reducer
 function reducer(state, action) {
     switch (action.type) {
-        case 'TOGGLE_LAYER':
-            return Object.assign({}, state, {
-                layers: state.layers.map(function (layer) {
-                    if (layer.id === action.id) {
-                        layer.opened = !layer.opened;
-                    } else {
-                        layer.opened = false;
-                    }
-                    return layer;
-                })
-            });
         case 'CLOSE_LAYER':
             return Object.assign({}, state, {
                 openedLayer: null,
-                animating: true,
                 layers: state.layers.map(function (layer) {
                     if (layer.id === action.id) {
                         layer.opened = false;
@@ -1080,8 +1112,6 @@ function reducer(state, action) {
         case 'OPEN_LAYER':
             return Object.assign({}, state, {
                 openedLayer: action.id,
-                nextLayerToOpen: null,
-                animating: true,
                 layers: state.layers.map(function (layer) {
                     if (layer.id === action.id) {
                         layer.opened = true;
@@ -1089,30 +1119,17 @@ function reducer(state, action) {
                     return layer;
                 })
             });
-        case 'TRANSITION_END':
-            return Object.assign({}, state, {
-                animating: false
-            });
-        case 'ENQUEUE_LAYER':
-            return Object.assign({}, state, {
-                nextLayerToOpen: action.id
-            });
         default:
             return state;
     }
 }
 
 //Store
-var store = (0, _redux.createStore)(reducer, initLayers());
+var store = (0, _redux.createStore)(reducer, initLayers(), (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 store.subscribe(function () {
     var state = store.getState();
     console.log(state);
-
-    if (!state.animating && state.nextLayerToOpen) {
-        store.dispatch(openLayer(store.nextLayerToOpen));
-        return;
-    }
 
     state.layers.forEach(function (layer) {
         layer.opened ? layer.el.classList.add('open') : layer.el.classList.remove('open');
@@ -1125,33 +1142,8 @@ function dispatchToggleLayerId(id) {
     };
 }
 
-function dispatchClearAnimating() {
-    store.dispatch({ type: 'TRANSITION_END' });
-}
-
-function clickHandler(id) {
-    return function () {
-        var openedLayer = store.getState().openedLayer;
-
-        if (openedLayer && openedLayer !== id) {
-            store.dispatch(closeLayer(openedLayer));
-            store.dispatch(enqueueLayerToOpen(id));
-            return;
-        }
-
-        if (openedLayer && openedLayer === id) {
-            store.dispatch(closeLayer(id));
-            return;
-        }
-
-        store.dispatch(openLayer(id));
-    };
-}
-
 store.getState().layers.forEach(function (layer) {
-    //layer.opener.addEventListener('click', dispatchToggleLayerId(layer.id));
-    layer.opener.addEventListener('click', clickHandler(layer.id));
-    layer.el.addEventListener('transitionend', dispatchClearAnimating);
+    layer.opener.addEventListener('click', dispatchToggleLayerId(layer.id));
 });
 
-},{"redux":6}]},{},[17]);
+},{"redux":7,"redux-thunk":1}]},{},[18]);
