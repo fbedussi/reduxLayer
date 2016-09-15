@@ -7,12 +7,14 @@
     "babel-preset-es2015": "^6.14.0",
     "babelify": "^7.3.0",
     "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0",
     "watchify": "^3.7.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "watchify src/main.js -o public/bundle.js -t [ babelify  --presets [ es2015 ] --sourceMaps 'both' ]"
+    "build": "watchify src/main.js -o public/bundle.js -t [ babelify  --presets [ es2015 ] --sourceMaps 'both' ]",
+    "build_simple": "watchify src/script_simple.js -o public/script_simple.js -t [ babelify  --presets [ es2015 ] --sourceMaps 'both' ]"
   },
   "keywords": [],
   "author": "",
