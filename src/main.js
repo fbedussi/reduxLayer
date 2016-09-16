@@ -27,7 +27,6 @@ function openLayer(id) {
 function toggleLayer(id) {
     var state = store.getState();
     var layer = state.layers.filter( layer => layer.id === id)[0];
-    var timer = 0;
     
     return dispatch => {
         if (layer.opened) {
@@ -37,12 +36,14 @@ function toggleLayer(id) {
         
         if (state.openedLayer) {
             dispatch(closeLayer(state.openedLayer));
-            timer = 500;
+            state.openedLayer.el.addEventListener('tranistionend', function(e) {
+                dispatch(openLayer(id));
+                e.target.removeEventListener('transitionend');
+            });
+            return;
         }
         
-        setTimeout(function() {
-            dispatch(openLayer(id));
-        }, timer);
+        dispatch(openLayer(id));
   };
 }
 
@@ -77,6 +78,7 @@ function reducer(state, action) {
 //Store
 let store = createStore(reducer, initLayers(), applyMiddleware(thunkMiddleware));
 
+//Front end 
 store.subscribe(function() {
     const state = store.getState();
     console.log(state);

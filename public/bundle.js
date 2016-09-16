@@ -1077,7 +1077,6 @@ function toggleLayer(id) {
     var layer = state.layers.filter(function (layer) {
         return layer.id === id;
     })[0];
-    var timer = 0;
 
     return function (dispatch) {
         if (layer.opened) {
@@ -1087,12 +1086,14 @@ function toggleLayer(id) {
 
         if (state.openedLayer) {
             dispatch(closeLayer(state.openedLayer));
-            timer = 500;
+            state.openedLayer.el.addEventListener('tranistionend', function (e) {
+                dispatch(openLayer(id));
+                e.target.removeEventListener('transitionend');
+            });
+            return;
         }
 
-        setTimeout(function () {
-            dispatch(openLayer(id));
-        }, timer);
+        dispatch(openLayer(id));
     };
 }
 
@@ -1127,6 +1128,7 @@ function reducer(state, action) {
 //Store
 var store = (0, _redux.createStore)(reducer, initLayers(), (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
+//Front end 
 store.subscribe(function () {
     var state = store.getState();
     console.log(state);
