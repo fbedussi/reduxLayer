@@ -35,11 +35,16 @@ function toggleLayer(id) {
         }
         
         if (state.openedLayer) {
+            state
+                .layers
+                .filter(layer => layer.id === state.openedLayer)[0]
+                .el
+                .addEventListener('transitionend', function transitionHandler(e) {
+                    dispatch(openLayer(id));
+                    e.target.removeEventListener('transitionend', transitionHandler);
+                })
+            ;
             dispatch(closeLayer(state.openedLayer));
-            state.openedLayer.el.addEventListener('tranistionend', function(e) {
-                dispatch(openLayer(id));
-                e.target.removeEventListener('transitionend');
-            });
             return;
         }
         
@@ -83,9 +88,9 @@ store.subscribe(function() {
     const state = store.getState();
     console.log(state);
     
-    state.layers.forEach(function(layer) {
-        (layer.opened) ? layer.el.classList.add('open') : layer.el.classList.remove('open');
-    });
+    state.layers.forEach(layer => 
+        (layer.opened) ? layer.el.classList.add('open') : layer.el.classList.remove('open')
+    );
 });
 
 function dispatchToggleLayerId(id) {
